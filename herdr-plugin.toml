@@ -1,6 +1,6 @@
 id = "rotemb-wond.copy-hints"
 name = "Copy Hints"
-version = "1.0.0"
+version = "1.1.0"
 min_herdr_version = "0.7.0"
 description = "Copy paths, commits, URLs, and identifiers using in-pane keyboard hints"
 platforms = ["linux", "macos"]

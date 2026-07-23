@@ -1,0 +1,55 @@
+name: Bug report
+description: Report behavior that is broken or unexpected
+title: "bug: "
+labels:
+  - bug
+body:
+  - type: markdown
+    attributes:
+      value: Thanks for helping improve Copy Hints.
+  - type: textarea
+    id: behavior
+    attributes:
+      label: What happened?
+      description: Include the text shown in the pane and what Copy Hints did.
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: What did you expect?
+    validations:
+      required: true
+  - type: input
+    id: herdr
+    attributes:
+      label: Herdr version
+      placeholder: Output of herdr --version
+    validations:
+      required: true
+  - type: input
+    id: plugin
+    attributes:
+      label: Copy Hints version
+      placeholder: For example, v1.1.0
+    validations:
+      required: true
+  - type: dropdown
+    id: platform
+    attributes:
+      label: Platform
+      options:
+        - macOS
+        - Linux
+    validations:
+      required: true
+  - type: textarea
+    id: config
+    attributes:
+      label: Plugin configuration
+      description: Paste config.json here and remove anything sensitive.
+      render: json
+  - type: textarea
+    id: context
+    attributes:
+      label: Additional context

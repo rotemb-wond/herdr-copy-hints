@@ -1,0 +1,21 @@
+{
+  "enabled_patterns": [
+    "url",
+    "git",
+    "uuid",
+    "ip",
+    "hex",
+    "sha",
+    "path",
+    "branch",
+    "number"
+  ],
+  "custom_patterns": {
+    "ticket": "TICKET-(?P<match>[0-9]+)"
+  },
+  "hint_alphabet": "asdfghjklwertyuiopzxcvbnm",
+  "hint_style": "30;103;1",
+  "matching_hint_style": "30;102;1",
+  "dimmed_hint_style": "90;100;2",
+  "clipboard_command": null
+}
