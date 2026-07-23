@@ -22,7 +22,7 @@ herdr plugin install rotemb-wond/herdr-copy-hints
 For a reproducible install, pin a release:
 
 ```sh
-herdr plugin install rotemb-wond/herdr-copy-hints --ref v1.1.0
+herdr plugin install rotemb-wond/herdr-copy-hints --ref v1.1.1
 ```
 
 Add a keybinding to `~/.config/herdr/config.toml`:

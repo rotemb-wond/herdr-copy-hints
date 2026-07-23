@@ -2,6 +2,7 @@
 
 import base64
 import contextlib
+import errno
 import fcntl
 import io
 import json
@@ -175,6 +176,19 @@ class CopyHintsTest(unittest.TestCase):
 
         encoded = base64.b64encode("hello 世界".encode()).decode()
         self.assertEqual(output.getvalue(), f"\x1b]52;c;{encoded}\a")
+
+    def test_retries_terminal_operations_interrupted_by_resize(self):
+        operation = mock.Mock(
+            side_effect=[
+                termios.error(errno.EINTR, "Interrupted system call"),
+                "ready",
+            ]
+        )
+
+        result = hints.retry_eintr(operation, "argument")
+
+        self.assertEqual(result, "ready")
+        self.assertEqual(operation.call_count, 2)
 
 
 class EndToEndTest(unittest.TestCase):

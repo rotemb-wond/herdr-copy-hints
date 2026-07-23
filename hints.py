@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import base64
+import errno
 import itertools
 import json
 import os
@@ -509,6 +510,18 @@ def show_message(message: str, *, error: bool = False, delay: float = 1.2) -> No
     time.sleep(delay)
 
 
+def retry_eintr(operation: Callable, *args):
+    while True:
+        try:
+            return operation(*args)
+        except (OSError, termios.error) as error:
+            error_number = getattr(error, "errno", None)
+            if error_number is None and error.args:
+                error_number = error.args[0]
+            if error_number != errno.EINTR:
+                raise
+
+
 def read_selection(
     herdr: str,
     pane_id: str,
@@ -516,7 +529,7 @@ def read_selection(
     initial_screen: Screen,
 ) -> Match | None:
     input_fd = sys.stdin.fileno()
-    previous = termios.tcgetattr(input_fd)
+    previous = retry_eintr(termios.tcgetattr, input_fd)
     screen = initial_screen
     prefix = ""
     resize_pending = False
@@ -529,7 +542,7 @@ def read_selection(
     signal.signal(signal.SIGWINCH, on_resize)
 
     try:
-        tty.setcbreak(input_fd)
+        retry_eintr(tty.setcbreak, input_fd)
         while True:
             if resize_pending:
                 resize_pending = False
@@ -574,7 +587,12 @@ def read_selection(
                 return screen.matches[exact[0]]
     finally:
         signal.signal(signal.SIGWINCH, previous_handler)
-        termios.tcsetattr(input_fd, termios.TCSADRAIN, previous)
+        retry_eintr(
+            termios.tcsetattr,
+            input_fd,
+            termios.TCSADRAIN,
+            previous,
+        )
 
 
 def clipboard_command(
