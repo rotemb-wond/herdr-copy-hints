@@ -1,5 +1,7 @@
 # Herdr Copy Hints
 
+[![test](https://github.com/rotemb-wond/herdr-copy-hints/actions/workflows/test.yml/badge.svg)](https://github.com/rotemb-wond/herdr-copy-hints/actions/workflows/test.yml)
+
 Keyboard-driven copy hints for [Herdr](https://herdr.dev), inspired by
 [tmux-fingers](https://github.com/Morantron/tmux-fingers).
 
@@ -7,48 +9,15 @@ Press one shortcut to place compact letter hints directly over paths, Git
 commits, URLs, and other useful values in the active pane. Type a hint to copy
 the full value immediately.
 
-## Features
-
-- Native Herdr overlay that preserves the pane layout and ANSI colors
-- One- or two-letter keyboard hints with no Enter required
-- Every visible occurrence is selectable
-- Recognizes:
-  - file paths and `file:line:column` locations
-  - Git SHAs, remotes, branches, status paths, and diff paths
-  - HTTP, HTTPS, SSH, Git, and file URLs
-  - IPv4 addresses, UUIDs, hexadecimal values, and long numbers
-- Unicode-aware hint placement
-- Local clipboard support on macOS, Wayland, and X11
-- OSC 52 fallback for remote sessions and minimal Linux environments
-- No Python dependencies outside the standard library
-
-## Requirements
-
-- Herdr 0.7.0 or newer
-- Python 3.10 or newer
-- macOS or Linux
-
-On Linux, local clipboard commands are detected in this order: `wl-copy`,
-`xclip`, then `xsel`. When none is installed, or when running over SSH, the
-plugin uses OSC 52 to copy through the attached terminal.
-
 ## Install
 
-After publishing this directory as a GitHub repository:
+Install from GitHub:
 
 ```sh
 herdr plugin install rotemb-wond/herdr-copy-hints
 ```
 
-For local development, clone the repository and link it:
-
-```sh
-git clone https://github.com/rotemb-wond/herdr-copy-hints.git
-cd herdr-copy-hints
-herdr plugin link "$PWD"
-```
-
-Add a shortcut to `~/.config/herdr/config.toml`:
+Add a keybinding to `~/.config/herdr/config.toml`:
 
 ```toml
 [[keys.command]]
@@ -58,13 +27,15 @@ command = "rotemb-wond.copy-hints.open"
 description = "show copy hints over the active pane"
 ```
 
-Apply the binding to a running server:
+Reload the configuration:
 
 ```sh
 herdr server reload-config
 ```
 
-## Use
+Requires Herdr 0.7.0 or newer, Python 3.10 or newer, and macOS or Linux.
+
+## Usage
 
 1. Press the configured shortcut, such as `ctrl+b`, then `f`.
 2. Type the yellow hint shown over the value you want.
@@ -75,20 +46,37 @@ hints in green and dims the rest.
 
 Press Escape or `ctrl+c` to cancel.
 
-## Test
+## What it recognizes
+
+- File paths and `file:line:column` locations
+- Git SHAs, remotes, branches, status paths, and diff paths
+- HTTP, HTTPS, SSH, Git, and file URLs
+- IPv4 addresses, UUIDs, hexadecimal values, and long numbers
+
+Every visible occurrence receives a hint. The overlay preserves pane layout,
+ANSI colors, and Unicode character alignment.
+
+## Clipboard support
+
+The plugin uses `pbcopy` on macOS. On Linux it detects `wl-copy`, `xclip`, or
+`xsel`. Remote sessions and systems without a clipboard command fall back to
+OSC 52, copying through the attached terminal.
+
+## Development
+
+Clone and link a development checkout:
+
+```sh
+git clone https://github.com/rotemb-wond/herdr-copy-hints.git
+cd herdr-copy-hints
+herdr plugin link "$PWD"
+```
+
+Run the dependency-free test suite:
 
 ```sh
 PYTHONDONTWRITEBYTECODE=1 python3 -m unittest -v test_hints.py
 ```
-
-## Publish to the Herdr marketplace
-
-1. Create a public GitHub repository named `herdr-copy-hints`.
-2. Push the contents of this directory to the repository root.
-3. Add the GitHub topic `herdr-plugin`.
-
-Herdr discovers marketplace entries automatically from that topic. See the
-[Herdr marketplace documentation](https://herdr.dev/docs/marketplace/).
 
 ## License
 
